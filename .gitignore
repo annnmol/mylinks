@@ -1,0 +1,86 @@
+# Yarn files
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# # Node dependencies
+node_modules/
+apps/*/node_modules/
+packages/*/node_modules/
+
+# # Lock files
+yarn.lock
+apps/*/yarn.lock
+packages/*/yarn.lock
+package-lock.json
+apps/*/package-lock.json
+packages/*/package-lock.json
+
+# # Build output
+dist/
+apps/*/dist/
+packages/*/dist/
+
+# # Expo specific files
+.expo/
+apps/*/.expo/
+packages/*/.expo/
+web-build/
+apps/*/web-build/
+packages/*/web-build/
+expo-env.d.ts
+apps/*/expo-env.d.ts
+packages/*/expo-env.d.ts
+
+# # Expo shared assets
+apps/*/expo-shared/
+packages/*/expo-shared/
+
+# #android build
+apps/*/android/
+packages/*/android/
+
+# #ios build
+apps/*/ios/
+packages/*/ios/
+
+#build artifacts
+apps/*/*.apk
+apps/*/*.aab
+apps/*/*.ipa
+packages/*/*.apk
+packages/*/*.aab
+packages/*/*.ipa
+
+# # Native files
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# # Metro cache
+.metro-health-check*
+
+# # Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# # macOS files
+.DS_Store
+*.pem
+
+# # Environment files
+.env*.local
+apps/*/.env*.local
+packages/*/.env*.local
+
+# # TypeScript build info
+*.tsbuildinfo
+apps/*/*.tsbuildinfo
+packages/*/*.tsbuildinfo
