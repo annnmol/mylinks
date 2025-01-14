@@ -33,8 +33,7 @@ const io = new Server(httpServer, {
   pingTimeout: 90000, // Disconnect if no 'pong' packet is received within 60 seconds
   cors: {
     origin: "*",
-    methods: ["GET", "POST"],
-    // credentials: true,
+    credentials: true,
   },
   // adapter: createAdapter(redisPubClient, redisSubClient),  // Attach Redis adapter
   parser: msgpackParser,
