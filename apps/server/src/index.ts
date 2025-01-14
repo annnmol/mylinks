@@ -1,18 +1,25 @@
 import cookieParser from "cookie-parser";
-import cors from 'cors';
-import { config } from 'dotenv';
-import express from 'express';
+import cors from "cors";
+import { config } from "dotenv";
+import express from "express";
 import http from "node:http";
+import { Server } from "socket.io";
+import msgpackParser from "socket.io-msgpack-parser";
 
-//user defined imports
-import { errorHandlingLogging, healthCheckLogging, incomingRequestLogging } from "./lib/utils";
+// User-defined imports ̑
+import { PORT } from "./lib/config";
+import {
+  errorHandlingLogging,
+  healthCheckLogging,
+  incomingRequestLogging,
+} from "./lib/utils";
 import middleware from "./middleware/middleware";
 import authRouter from "./routes/auth.routes";
 import userRouter from "./routes/user.routes";
+import { setupProtectedSocket, setupPublicSocket } from "./sockets/namespaces";
 
+// Load environment variables
 config();
-
-const PORT = Number(process.env.PORT ?? 3000);
 
 /** EXPRESS app initialize */
 const app = express();
@@ -20,13 +27,32 @@ const app = express();
 /** http Server Handling */
 const httpServer = http.createServer(app);
 
-app.use(cors({
-  origin: ['*'],
-  credentials: true,
-}));
+/** Socket.IO server */
+const io = new Server(httpServer, {
+  pingInterval: 30000, // Send a new 'ping' packet every 30 seconds
+  pingTimeout: 90000, // Disconnect if no 'pong' packet is received within 60 seconds
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    // credentials: true,
+  },
+  // adapter: createAdapter(redisPubClient, redisSubClient),  // Attach Redis adapter
+  parser: msgpackParser,
+});
 
-app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
-app.use(cookieParser()); // to parse the incoming requests with cookies
+/** Middleware for Express */
+app.use(
+  cors({
+    origin: ["*"],
+    credentials: true,
+  })
+);
+
+// Parse incoming JSON payloads
+app.use(express.json());
+
+// Parse cookies
+app.use(cookieParser());
 
 // Log the incoming request details
 app.use(incomingRequestLogging);
@@ -34,24 +60,32 @@ app.use(incomingRequestLogging);
 // Health check endpoint
 app.get("/api/health-check", healthCheckLogging);
 
-// auth routes
+// Auth routes
 app.use("/api/auth", authRouter);
 
 // Middleware
-app.use(middleware)
+app.use(middleware);
 
-// Protected Routes
+// Protected routes
 app.use("/api/user", userRouter);
 
-// Route Error handling 
+// Route error handling
 app.use(errorHandlingLogging);
 
+// Connect to MongoDB
 // connectToMongoDB();
 
-//app start
+// Public namespace for unauthenticated connections
+const publicNamespace = io.of("/public");
+setupPublicSocket(publicNamespace);
+
+// Protected namespace for authenticated connections
+const protectedNamespace = io.of("/protected");
+setupProtectedSocket(protectedNamespace);
+
+/** Server start */
 httpServer.listen(PORT, () => {
   console.info(`Server is running at PORT: ${PORT}`);
 });
 
-// export default app;
-export default { app };
+export default { app, io };

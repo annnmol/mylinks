@@ -1,20 +1,15 @@
-import { NextFunction, Response, Request } from "express";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import { NextFunction, Request, Response } from "express";
 
 //custom imports
+import { decodeToken, removeTokenAndSetCookie } from "../lib/generate-jwt-token";
 import { excludeKeys } from "../lib/utils";
 import { getUserById } from "../services/user.services";
-
-dotenv.config();
 
 declare module "express" {
   export interface Request {
     user?: any;
   }
 }
-
-const JWT_SECRET = process.env.JWT_SECRET!;
 
 const middleware = async (
   req: Request,
@@ -25,15 +20,14 @@ const middleware = async (
     const token = req.cookies.jwt;
 
     if (!token) {
-      res.clearCookie("jwt");
-      res.cookie("jwt", "", { maxAge: 0 });
+      removeTokenAndSetCookie(res);
       return res
         .status(401)
         .json({ error: "Unauthorized - No Token Provided" });
     }
 
-    const decoded: any = jwt.verify(token, JWT_SECRET);
-    
+    const decoded: any = decodeToken(token);
+
     if (!decoded || !decoded?.userId) {
       return res.status(401).json({ error: "Unauthorized - Invalid Token" });
     }

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
-const PORT = Number(process.env.PORT ?? 3000);
+//custom imports
+import { PORT } from "./config";
 
 export async function sleep(ms: number) {
   return new Promise((resolve) => {
@@ -42,11 +43,9 @@ export const incomingRequestLogging = (
   next();
 };
 
-
-
 export const excludeKeys = (obj: any, keys: string[]): any => {
   const newObj = { ...obj };
-  keys?.forEach((key:string) => {
+  keys?.forEach((key: string) => {
     delete newObj?.[key];
   });
   return newObj;
