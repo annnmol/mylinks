@@ -17,21 +17,22 @@
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
+    "@tanstack/react-query": "^5.64.2",
     "@types/qrcode": "^1.5.5",
     "axios": "^1.7.9",
-    "expo": "~52.0.25",
-    "expo-blur": "~14.0.2",
-    "expo-camera": "~16.0.11",
+    "expo": "~52.0.26",
+    "expo-blur": "~14.0.3",
+    "expo-camera": "~16.0.14",
     "expo-constants": "~17.0.4",
-    "expo-dev-client": "~5.0.9",
+    "expo-dev-client": "~5.0.10",
     "expo-device": "~7.0.2",
     "expo-font": "~13.0.3",
     "expo-haptics": "~14.0.1",
     "expo-image": "~2.0.4",
     "expo-linking": "~7.0.4",
     "expo-notifications": "~0.29.12",
-    "expo-router": "~4.0.16",
-    "expo-splash-screen": "~0.29.20",
+    "expo-router": "~4.0.17",
+    "expo-splash-screen": "~0.29.21",
     "expo-status-bar": "~2.0.1",
     "expo-symbols": "~0.2.1",
     "expo-system-ui": "~4.0.7",
@@ -61,5 +62,16 @@
     "react-test-renderer": "18.3.1",
     "typescript": "^5.3.3"
   },
-  "private": true
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "socket.io-client",
+          "socket.io-msgpack-parser"
+        ]
+      }
+    }
+  },
+  "private": true,
+  "packageManager": "yarn@1.22.22"
 }

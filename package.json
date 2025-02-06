@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "veriqr",
+  "name": "mylinks",
   "version": "1.0.0",
   "workspaces": [
     "apps/*",
